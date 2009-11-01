@@ -1,0 +1,52 @@
+<project name="ansiconsolelogger" default="dist" basedir=".">
+  <description>Ant build file for ANSIConsoleLogger.</description>
+
+  
+  <!-- Builds everything from scratch. -->
+  <target name="all" depends="clean, dist" description="Builds everything from scratch."/>  
+  
+  
+  <!-- Deletes all directories and files created by the build process. -->
+  <target name="clean" description="Remove all files created by the build process." >
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>    
+  
+  
+  <!-- Build all Java code. -->
+  <target name="compile" description="Compile Java sources." >
+    <mkdir dir="build/classes" />
+    <javac destdir="build/classes"
+           classpath="lib/log4j-1.2.13.jar"
+           debug="on"
+           deprecation="on"
+           optimize="on"
+           source="1.3"
+           target="1.3"
+           srcdir="src/java" />
+  </target>
+
+
+  <!-- Build application JAR files. -->
+  <target name="jar" depends="compile" description="Create the project JAR file.">
+    <jar jarfile="build/ansiconsolelogger.jar">
+      <fileset dir="build/classes" />
+      <manifest>
+        <attribute name="Main-Class" value="org.uncommons.ansiconsolelogger.ANSIConsoleLoggerExample"/>
+        <attribute name="Class-Path" value="log4j-1.2.13.jar"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  
+  <!-- Copy all necessary files to deployment directory. -->
+  <target name="dist" depends="jar" description="Generate the deployment tree." >
+    <mkdir dir="dist" />
+    <!-- Deploy all application JARs, libraries and config files. -->
+    <copy todir="dist">
+      <fileset dir="build" includes="**/*.jar" />
+      <fileset dir="lib" includes="*.jar" />
+    </copy>
+  </target>
+
+</project>
